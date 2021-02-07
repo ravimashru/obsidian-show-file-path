@@ -3,7 +3,7 @@
 	"name": "Show Current File Path",
 	"version": "0.0.1",
 	"minAppVersion": "0.9.12",
-	"description": "",
+	"description": "Show the full path of the currently open file in the status bar",
 	"author": "Ravi Mashru",
 	"authorUrl": "https://ravimashru.dev",
 	"isDesktopOnly": false
