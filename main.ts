@@ -1,6 +1,6 @@
 import { Plugin } from 'obsidian';
 
-export default class MyPlugin extends Plugin {
+export default class FilePathPlugin extends Plugin {
   async onload() {
     const statusBarItem = this.addStatusBarItem();
 
