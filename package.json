@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-sample-plugin",
-  "version": "0.9.7",
-  "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+  "name": "obsidian-show-file-path",
+  "version": "0.1.0",
+  "description": "Show the full path of the currently open file in the status bar",
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
