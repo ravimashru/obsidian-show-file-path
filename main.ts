@@ -1,4 +1,5 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { convertPathToHtmlFragment } from 'utility';
 
 interface PluginSettings {
   showFileName: boolean;
@@ -20,7 +21,9 @@ export default class FilePathPlugin extends Plugin {
         const pathToDisplay = this.settings.showFileName
           ? file.path
           : file.parent.path;
-        statusBarItem.setText(pathToDisplay);
+        const fragment = convertPathToHtmlFragment(pathToDisplay);
+        statusBarItem.innerHTML = '';
+        statusBarItem.appendChild(fragment);
       })
     );
 
