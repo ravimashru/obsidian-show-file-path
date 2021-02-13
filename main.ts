@@ -21,7 +21,10 @@ export default class FilePathPlugin extends Plugin {
         const pathToDisplay = this.settings.showFileName
           ? file.path
           : file.parent.path;
-        const fragment = convertPathToHtmlFragment(pathToDisplay);
+        const fragment = convertPathToHtmlFragment(
+          pathToDisplay,
+          this.settings.showFileName
+        );
         statusBarItem.innerHTML = '';
         statusBarItem.appendChild(fragment);
       })
