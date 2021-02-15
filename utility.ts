@@ -1,24 +1,34 @@
 export function convertPathToHtmlFragment(
   path: string,
-  pathContainsFileName: boolean
+  pathContainsFileName: boolean,
+  includeIcons: boolean
 ): DocumentFragment {
   const fragment = new DocumentFragment();
   const pathParts = getPathParts(path, pathContainsFileName);
   pathParts.forEach((part) => {
-    fragment.appendChild(getNodeForPathPart(part));
+    fragment.appendChild(getNodeForPathPart(part, includeIcons));
   });
   return fragment;
 }
 
-export function getNodeForPathPart(part: PathPart): DocumentFragment {
+export function getNodeForPathPart(
+  part: PathPart,
+  includeIcon: boolean
+): DocumentFragment {
   const fragment = new DocumentFragment();
   switch (part.type) {
     case PATH_PART_TYPE.FOLDER:
-      fragment.appendText(`📁 ${part.name}`);
+      if (includeIcon) {
+        fragment.appendText(`📁 `);
+      }
+      fragment.appendText(part.name);
       break;
 
     case PATH_PART_TYPE.FILE:
-      fragment.appendText(`📄 ${part.name}`);
+      if (includeIcon) {
+        fragment.appendText(`📄 `);
+      }
+      fragment.appendText(part.name);
       break;
 
     case PATH_PART_TYPE.SEPARATOR:

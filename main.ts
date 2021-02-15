@@ -3,10 +3,12 @@ import { convertPathToHtmlFragment } from 'utility';
 
 interface PluginSettings {
   showFileName: boolean;
+  showIcons: boolean;
 }
 
 const DEFAULT_SETTINGS: PluginSettings = {
   showFileName: false,
+  showIcons: true,
 };
 
 export default class FilePathPlugin extends Plugin {
@@ -23,7 +25,8 @@ export default class FilePathPlugin extends Plugin {
           : file.parent.path;
         const fragment = convertPathToHtmlFragment(
           pathToDisplay,
-          this.settings.showFileName
+          this.settings.showFileName,
+          this.settings.showIcons
         );
         statusBarItem.innerHTML = '';
         statusBarItem.appendChild(fragment);
@@ -60,6 +63,18 @@ class SettingsTab extends PluginSettingTab {
           .setValue(this.plugin.settings.showFileName)
           .onChange(async (value) => {
             this.plugin.settings.showFileName = value;
+            await this.plugin.saveSettings();
+          })
+      );
+
+    new Setting(containerEl)
+      .setName('Show icons')
+      .setDesc('Show folder and file icons')
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.showIcons)
+          .onChange(async (value) => {
+            this.plugin.settings.showIcons = value;
             await this.plugin.saveSettings();
           })
       );
