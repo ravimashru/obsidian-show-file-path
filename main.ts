@@ -1,4 +1,4 @@
-import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
 import { convertPathToHtmlFragment } from 'utility';
 
 interface PluginSettings {
@@ -18,21 +18,28 @@ export default class FilePathPlugin extends Plugin {
     await this.loadSettings();
     const statusBarItem = this.addStatusBarItem();
 
+    const showFile = (file: TFile) => {
+      if (!file) return;
+      const pathToDisplay = this.settings.showFileName
+        ? file.path
+        : file.parent.path;
+      const fragment = convertPathToHtmlFragment(
+        pathToDisplay,
+        this.settings.showFileName,
+        this.settings.showIcons
+      );
+      statusBarItem.innerHTML = '';
+      statusBarItem.appendChild(fragment);
+    };
+
     this.registerEvent(
-      this.app.workspace.on('file-open', (file) => {
-        const pathToDisplay = this.settings.showFileName
-          ? file.path
-          : file.parent.path;
-        const fragment = convertPathToHtmlFragment(
-          pathToDisplay,
-          this.settings.showFileName,
-          this.settings.showIcons
-        );
-        statusBarItem.innerHTML = '';
-        statusBarItem.appendChild(fragment);
+      this.app.workspace.on('file-open', showFile)
+    );
+    this.registerEvent(
+      this.app.vault.on('rename', file => {
+        if (file instanceof TFile && file === this.app.workspace.getActiveFile()) showFile(file);
       })
     );
-
     this.addSettingTab(new SettingsTab(this.app, this));
   }
 
