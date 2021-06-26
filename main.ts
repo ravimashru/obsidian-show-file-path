@@ -1,4 +1,4 @@
-import { App, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
+import { App, Notice, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
 import { convertPathToHtmlFragment } from 'utility';
 
 interface PluginSettings {
@@ -41,6 +41,17 @@ export default class FilePathPlugin extends Plugin {
       })
     );
     this.addSettingTab(new SettingsTab(this.app, this));
+
+    statusBarItem.classList.add('mod-clickable');
+    statusBarItem.addEventListener('click', () => {
+      const activeFile = this.app.workspace.getActiveFile();
+      const textToCopy = this.settings.showFileName
+      ? activeFile.path
+      : activeFile.parent.path;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        new Notice("Path copied to clipboard");
+      });
+    });
   }
 
   async loadSettings() {

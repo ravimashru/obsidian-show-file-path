@@ -1,8 +1,8 @@
 {
 	"id": "obsidian-show-file-path",
 	"name": "Show Current File Path",
-	"version": "0.2.1",
-	"minAppVersion": "0.11.9",
+	"version": "0.3.0",
+	"minAppVersion": "0.12.4",
 	"description": "Show the full path of the currently open file in the status bar",
 	"author": "Ravi Mashru",
 	"authorUrl": "https://ravimashru.dev",
