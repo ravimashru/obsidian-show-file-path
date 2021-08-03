@@ -1,18 +1,25 @@
-import { App, Notice, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
+import { App, Notice, Plugin, PluginManifest, PluginSettingTab, Setting, TFile } from 'obsidian';
 import { convertPathToHtmlFragment } from 'utility';
+import * as path from 'path';
 
 interface PluginSettings {
   showFileName: boolean;
   showIcons: boolean;
+  copyAbsolutePath: boolean;
 }
 
 const DEFAULT_SETTINGS: PluginSettings = {
   showFileName: false,
   showIcons: true,
+  copyAbsolutePath: false,
 };
 
 export default class FilePathPlugin extends Plugin {
   settings: PluginSettings;
+
+  constructor(app: App, pluginManifest: PluginManifest) {
+    super(app, pluginManifest);
+  }
 
   async onload() {
     await this.loadSettings();
@@ -45,9 +52,17 @@ export default class FilePathPlugin extends Plugin {
     statusBarItem.classList.add('mod-clickable');
     statusBarItem.addEventListener('click', () => {
       const activeFile = this.app.workspace.getActiveFile();
-      const textToCopy = this.settings.showFileName
-      ? activeFile.path
-      : activeFile.parent.path;
+
+      const relativePath = this.settings.showFileName
+        ? activeFile.path
+        : activeFile.parent.path;
+
+      const absolutePath = path.join(this.app.vault.adapter.basePath, relativePath);
+
+      const textToCopy = this.settings.copyAbsolutePath
+        ? absolutePath
+        : relativePath;
+
       navigator.clipboard.writeText(textToCopy).then(() => {
         new Notice("Path copied to clipboard");
       });
@@ -96,5 +111,18 @@ class SettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
+
+      new Setting(containerEl)
+      .setName('Copy absolute path')
+      .setDesc('Copy absolute path on clicking status bar')
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.copyAbsolutePath)
+          .onChange(async (value) => {
+            this.plugin.settings.copyAbsolutePath = value;
+            await this.plugin.saveSettings();
+          })
+      );
+
   }
 }
