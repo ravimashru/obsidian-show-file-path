@@ -9,5 +9,6 @@ If there are multiple files open in panes, the path of the one that currently ha
 - Show icons for each part of the path (folders and file)
 - Show/hide the name of the file in the path
 - Click the path (in the status bar) to copy it to the clipboard
+- Use "Show Current File Path: Copy path" command to copy path to the clipboard
 - Copy relative or absolute path of file based on setting
 
