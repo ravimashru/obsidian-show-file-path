@@ -53,6 +53,11 @@ export default class FilePathPlugin extends Plugin {
     statusBarItem.addEventListener('click', () => {
       const activeFile = this.app.workspace.getActiveFile();
 
+      // The last open file is closed, no currently open files
+      if (!activeFile) {
+        return;
+      }
+
       const relativePath = this.settings.showFileName
         ? activeFile.path
         : activeFile.parent.path;
