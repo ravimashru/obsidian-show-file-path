@@ -39,18 +39,7 @@ export default class FilePathPlugin extends Plugin {
       statusBarItem.appendChild(fragment);
     };
 
-    this.registerEvent(
-      this.app.workspace.on('file-open', showFile)
-    );
-    this.registerEvent(
-      this.app.vault.on('rename', file => {
-        if (file instanceof TFile && file === this.app.workspace.getActiveFile()) showFile(file);
-      })
-    );
-    this.addSettingTab(new SettingsTab(this.app, this));
-
-    statusBarItem.classList.add('mod-clickable');
-    statusBarItem.addEventListener('click', () => {
+    const copyPathToClipboard = () => {
       const activeFile = this.app.workspace.getActiveFile();
 
       // The last open file is closed, no currently open files
@@ -71,6 +60,25 @@ export default class FilePathPlugin extends Plugin {
       navigator.clipboard.writeText(textToCopy).then(() => {
         new Notice("Path copied to clipboard");
       });
+    }
+
+    this.registerEvent(
+      this.app.workspace.on('file-open', showFile)
+    );
+    this.registerEvent(
+      this.app.vault.on('rename', file => {
+        if (file instanceof TFile && file === this.app.workspace.getActiveFile()) showFile(file);
+      })
+    );
+    this.addSettingTab(new SettingsTab(this.app, this));
+
+    statusBarItem.classList.add('mod-clickable');
+    statusBarItem.addEventListener('click', copyPathToClipboard);
+
+    this.addCommand({
+      id: 'copy-file-path',
+      name: 'Copy path',
+      callback: copyPathToClipboard
     });
   }
 
